@@ -1,3 +1,4 @@
+import asyncio
 from miniapp_runner import run_miniapp
 
 async def handle_giveaway(app, config):
@@ -11,14 +12,16 @@ async def handle_giveaway(app, config):
                             print(f"[{app.name}] نیاز به Boost دارد، فعلاً رد می‌شود ❌")
                             continue
 
-                        # جوین به کانال شرط
+                        # جوین به کانال‌های شرطی (ممکنه چندتا باشه)
                         if "Subscribe: @" in msg.text:
-                            try:
-                                required_channel = msg.text.split("Subscribe: @")[1].split()[0]
-                                await app.join_chat(f"@{required_channel}")
-                                print(f"[{app.name}] جوین شد به {required_channel}")
-                            except Exception as e:
-                                print(f"[{app.name}] خطا در جوین: {e}")
+                            targets = [part.strip("@") for part in msg.text.split() if part.startswith("@")]
+                            for channel in targets:
+                                try:
+                                    await app.join_chat(f"@{channel}")
+                                    print(f"[{app.name}] جوین شد به {channel}")
+                                    await asyncio.sleep(10)  # ⏱️ فاصله 10 ثانیه
+                                except Exception as e:
+                                    print(f"[{app.name}] خطا در جوین {channel}: {e}")
 
                         # اجرای مینی‌اپ
                         url = first_button.url
