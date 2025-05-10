@@ -5,10 +5,10 @@ def run_miniapp(url):
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
         page.goto(url)
-        page.wait_for_timeout(5000)
+        page.wait_for_timeout(3000)
         try:
             page.click("text=Enter Giveaway")
-            print("کلیک روی Enter Giveaway انجام شد")
-        except:
-            print("دکمه یافت نشد")
+            print("🎯 کلیک روی Enter Giveaway انجام شد ✅")
+        except Exception as e:
+            print(f"❌ خطا در کلیک روی Enter Giveaway: {e}")
         browser.close()
